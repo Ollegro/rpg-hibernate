@@ -30,6 +30,8 @@ public class PlayerRepositoryDB implements IPlayerRepository {
     public List<Player> getAll(int pageNumber, int pageSize) {
         try (Session session = sessionFactory.openSession()) {
             NativeQuery<Player> query = session.createNativeQuery("select * from player", Player.class);
+            query.setFirstResult(pageNumber * pageSize);
+            query.setMaxResults(pageSize);
             return query.list();
         }
     }
@@ -37,8 +39,8 @@ public class PlayerRepositoryDB implements IPlayerRepository {
     @Override
     public int getAllCount() {
         try (Session session = sessionFactory.openSession()) {
-            Query<Player> query = session.createNamedQuery("GetAllCountPlayer", Player.class);
-            return query.getFirstResult();
+            Query<Long> playerGetAllCount = session.createNamedQuery("player_getAllCount", Long.class);
+            return Math.toIntExact(playerGetAllCount.uniqueResult());
         }
     }
 
@@ -46,10 +48,11 @@ public class PlayerRepositoryDB implements IPlayerRepository {
     public Player save(Player player) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.persist(player);
+            session.save(player);
             transaction.commit();
+            return player;
         }
-        return player;
+
     }
 
     @Override
@@ -58,16 +61,16 @@ public class PlayerRepositoryDB implements IPlayerRepository {
             Transaction transaction = session.beginTransaction();
             session.update(player);
             transaction.commit();
+            return player;
         }
-        return player;
+
     }
 
     @Override
     public Optional<Player> findById(long id) {
         try (Session session = sessionFactory.openSession()) {
-            Query<Player> query = session.createQuery("from Player where id = id", Player.class);
-            Optional<Player> optionalPlayer = query.uniqueResultOptional();
-            return optionalPlayer;
+            Player player = session.find(Player.class, id);
+            return Optional.of(player);
         }
 
     }
@@ -76,7 +79,7 @@ public class PlayerRepositoryDB implements IPlayerRepository {
     public void delete(Player player) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.delete(player);
+            session.remove(player);
             transaction.commit();
         }
 
