@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 
+@org.hibernate.annotations.NamedQuery(name = "GetAllCountPlayer",
+        query = "select count(*) from Player")
+
 @Entity
 @Table(name = "player", schema = "rpg")
 public class Player {
@@ -21,7 +24,7 @@ public class Player {
     private Profession profession;
     @Column(name = "birthday", nullable = false)
     private Date birthday;
-    @Column(name = "banned", nullable = false)
+    @Column(name = "banned")
     private Boolean banned;
     @Column(name = "level",nullable = false)
     private Integer level;
