@@ -1,8 +1,5 @@
 package com.game.repository;
-
 import com.game.entity.Player;
-
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -13,8 +10,6 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.Optional;
-
-
 
 @Repository(value = "db")
 public class PlayerRepositoryDB implements IPlayerRepository {
@@ -69,7 +64,7 @@ public class PlayerRepositoryDB implements IPlayerRepository {
     @Override
     public Optional<Player> findById(long id) {
         try (Session session = sessionFactory.openSession()) {
-            Player player = session.find(Player.class, id);
+            Player player = session.find(Player.class, Optional.of(id));
             return Optional.of(player);
         }
 

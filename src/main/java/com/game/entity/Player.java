@@ -1,17 +1,12 @@
 package com.game.entity;
-
 import jakarta.persistence.*;
-
 import java.util.Date;
-
-
-
 @Entity
 @Table( schema = "rpg", name = "player")
 @NamedQuery(name = "player_getAllCount", query = "select count(p) from Player p")
 public class Player {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id",nullable = false)
     private Long id;
     @Column(name = "name", length = 12, nullable = false)
@@ -33,7 +28,6 @@ public class Player {
 
     public Player() {
     }
-
     public Player(Long id, String name, String title, Race race, Profession profession, Date birthday, Boolean banned, Integer level) {
         this.id = id;
         this.name = name;
@@ -44,19 +38,15 @@ public class Player {
         this.banned = banned;
         this.level = level;
     }
-
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
